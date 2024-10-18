@@ -1,0 +1,32 @@
+service: ce6-12sept-sls
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-southeast-1
+
+functions:
+  api:
+    handler: handler.handler
+    environment:
+      CLASS_NAME: "CE 6"
+      EMAIL_ADDRESS: 
+        Ref: DelfrinandoEmailSns
+    events:
+      - httpApi:
+          path: /
+          method: get
+
+resources:
+  Resources:
+    DelfrinandoEmailSns:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: delfrinando-email-topic
+        Subscription: 
+          - Protocol: "email"
+            Endpoint: "delfrinando@gmail.com"
+
+plugins:
+  - serverless-offline
